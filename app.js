@@ -180,18 +180,33 @@ function getBeadPosition(angle) {
 
 function getBeadLayout(beads, ringSize) {
   const sizes = beads.map(bead => getBeadDisplaySize(bead, beads.length, ringSize));
+  if (!isBraceletFull()) {
+    return {
+      positions: beads.map((_, index) => getEvenBeadPosition(index, beads.length)),
+      sizes
+    };
+  }
+
   const guideRadiusPx = ringSize * 0.37;
-  const packingTightness = 0.94;
   let angle = -Math.PI / 2;
   const positions = sizes.map((size, index) => {
     if (index > 0) {
       const prevSize = sizes[index - 1];
-      angle += (((prevSize / 2) + (size / 2)) * packingTightness) / guideRadiusPx;
+      angle += ((prevSize / 2) + (size / 2)) / guideRadiusPx;
     }
     return getBeadPosition(angle);
   });
 
   return { positions, sizes };
+}
+
+function getEvenBeadPosition(index, count) {
+  const angle = count === 1 ? -Math.PI / 2 : -Math.PI / 2 + (Math.PI * 2 / count) * index;
+  return getBeadPosition(angle);
+}
+
+function isBraceletFull() {
+  return finishedCm() - usedCm() <= 0.15;
 }
 
 function getBeadDisplaySize(bead, count, ringSize) {
