@@ -179,11 +179,11 @@ function getBeadPosition(index, count) {
 }
 
 function getBeadDisplaySize(bead, count, ringSize) {
-  const sizeScale = Math.max(0.62, Math.min(1, ringSize / 480));
-  const touchScale = window.matchMedia("(max-width: 700px)").matches ? 1.32 : 1.06;
-  const beadPxPerMm = window.matchMedia("(max-width: 700px)").matches ? 4.05 : 3.55;
-  const baseSize = bead.size * beadPxPerMm * sizeScale * touchScale;
-  return Math.max(24, baseSize);
+  const guideRadiusPx = ringSize * 0.37;
+  const pxPerCm = (Math.PI * 2 * guideRadiusPx) / finishedCm();
+  const physicalDiameterPx = (bead.size / 10) * pxPerCm;
+  const touchBoost = window.matchMedia("(max-width: 700px)").matches ? 1.08 : 1.03;
+  return Math.max(26, physicalDiameterPx * touchBoost);
 }
 
 function renderMetrics() {
