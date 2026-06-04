@@ -901,10 +901,11 @@ svg {
   }
 
   .designer-view {
+    --mobile-picker-height: clamp(252px, 35dvh, 340px);
     min-height: 100dvh;
     width: 100vw;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(540px, 70dvh) minmax(0, calc(30dvh - 8px));
+    grid-template-rows: minmax(0, calc(100dvh - var(--mobile-picker-height) - 24px)) var(--mobile-picker-height);
     gap: 8px;
     padding: 8px;
   }
@@ -918,25 +919,34 @@ svg {
     overflow: hidden;
     padding: 10px;
     gap: 8px;
-    border-radius: 22px;
+    border-radius: 20px 20px 0 0;
   }
 
   .workspace-panel {
     grid-row: 1;
+    position: relative;
     min-height: 0;
     height: 100%;
     width: calc(100vw - 16px);
     max-width: calc(100vw - 16px);
     overflow: hidden;
-    padding: 8px;
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
-    gap: 5px;
-    border-radius: 22px;
+    padding: 0;
+    display: block;
+    border-radius: 22px 22px 18px 18px;
   }
 
   .panel-header h2,
   .studio-topbar h2 {
-    font-size: 17px;
+    font-size: 16px;
+  }
+
+  .studio-topbar {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 10px;
+    z-index: 6;
+    pointer-events: none;
   }
 
   .studio-topbar .button {
@@ -949,6 +959,35 @@ svg {
 
   .catalog-panel .panel-header {
     display: none;
+  }
+
+  .catalog-list {
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .catalog-list .section-title-row {
+    min-height: 24px;
+  }
+
+  .catalog-list .section-title-row h3 {
+    font-size: 13px;
+  }
+
+  .catalog-list .section-title-row span {
+    font-size: 11px;
+  }
+
+  .color-tabs {
+    gap: 7px;
+    padding: 0 2px 4px;
+  }
+
+  .color-tab {
+    min-width: 66px;
+    min-height: 34px;
+    border-radius: 999px;
+    font-size: 12px;
   }
 
   .size-control {
@@ -982,7 +1021,7 @@ svg {
     overflow-x: hidden;
     overflow-y: auto;
     padding-right: 4px;
-    padding-bottom: 12px;
+    padding-bottom: 16px;
   }
 
   .catalog-group {
@@ -990,48 +1029,73 @@ svg {
   }
 
   .sku-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .sku-card {
-    min-height: 78px;
-    padding: 10px;
+    min-height: 92px;
+    padding: 9px 7px;
+    text-align: center;
   }
 
   .sku-swatch {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 8px;
+    width: 34px;
+    height: 34px;
+    margin: 0 auto 6px;
+  }
+
+  .sku-card strong {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .sku-card span {
+    margin-top: 3px;
+    font-size: 11px;
   }
 
   .metrics-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
+    position: absolute;
+    top: 42px;
+    right: 10px;
+    z-index: 6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
     min-width: 0;
-    max-width: 100%;
+    max-width: calc(100% - 20px);
+    pointer-events: none;
   }
 
   .metrics-row article {
-    min-height: 34px;
+    min-height: 28px;
     padding: 5px 8px;
-    border-radius: 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 5px 6px 14px rgba(130, 137, 148, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   }
 
   .metrics-row span {
-    font-size: 9px;
+    display: none;
   }
 
   .metrics-row strong {
-    margin-top: 1px;
-    font-size: 14px;
+    margin-top: 0;
+    white-space: nowrap;
+    font-size: 12px;
   }
 
   .bracelet-stage {
-    border-radius: 20px;
+    height: 100%;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 50% 51%, rgba(255, 255, 255, 0.94), transparent 35%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(238, 240, 244, 0.78));
   }
 
   .bracelet-ring {
-    width: min(94vw, 52dvh);
+    width: min(96vw, calc(100% - 92px), 520px);
   }
 
   .trash-zone {
@@ -1042,8 +1106,13 @@ svg {
   }
 
   .action-strip {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 6;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: 1.1fr 1fr 0.8fr 0.8fr;
     gap: 5px;
   }
 
