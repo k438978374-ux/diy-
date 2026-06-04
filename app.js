@@ -171,18 +171,19 @@ function animateBeadsFrom(previousRects) {
 
 function getBeadPosition(index, count) {
   const angle = count === 1 ? -Math.PI / 2 : -Math.PI / 2 + (Math.PI * 2 / count) * index;
+  const guideRadiusPct = 37;
   return {
-    x: 50 + Math.cos(angle) * 34,
-    y: 50 + Math.sin(angle) * 34
+    x: 50 + Math.cos(angle) * guideRadiusPct,
+    y: 50 + Math.sin(angle) * guideRadiusPct
   };
 }
 
 function getBeadDisplaySize(bead, count, ringSize) {
   const sizeScale = Math.max(0.62, Math.min(1, ringSize / 480));
-  const touchScale = window.matchMedia("(max-width: 700px)").matches ? 1.2 : 1;
-  const baseSize = (22 + bead.size * 2.6) * sizeScale * touchScale;
-  const maxByCount = count > 1 ? (ringSize * 2.136) / count * 0.74 : baseSize;
-  return Math.max(14, Math.min(baseSize, maxByCount));
+  const touchScale = window.matchMedia("(max-width: 700px)").matches ? 1.32 : 1.06;
+  const beadPxPerMm = window.matchMedia("(max-width: 700px)").matches ? 4.05 : 3.55;
+  const baseSize = bead.size * beadPxPerMm * sizeScale * touchScale;
+  return Math.max(24, baseSize);
 }
 
 function renderMetrics() {
