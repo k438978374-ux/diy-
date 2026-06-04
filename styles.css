@@ -965,6 +965,10 @@ svg {
     display: none;
   }
 
+  .studio-topbar h2 {
+    display: none;
+  }
+
   .catalog-panel .panel-header {
     display: none;
   }
@@ -1065,33 +1069,40 @@ svg {
 
   .metrics-row {
     position: absolute;
-    top: 52px;
+    top: 24px;
     right: 14px;
+    left: 14px;
     z-index: 6;
     display: flex;
     justify-content: flex-end;
-    gap: 5px;
+    align-items: center;
+    gap: 7px;
     min-width: 0;
-    max-width: calc(100% - 20px);
+    max-width: none;
     pointer-events: none;
   }
 
   .metrics-row article {
-    min-height: 28px;
-    padding: 5px 8px;
+    min-height: 30px;
+    padding: 5px 10px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.78);
     box-shadow: 5px 6px 14px rgba(130, 137, 148, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   }
 
   .metrics-row span {
-    display: none;
+    display: inline;
+    margin-right: 4px;
+    color: #8f96a2;
+    font-size: 11px;
+    font-weight: 700;
   }
 
   .metrics-row strong {
-    margin-top: 0;
+    display: inline;
     white-space: nowrap;
-    font-size: 12px;
+    font-size: 13px;
+    line-height: 1;
   }
 
   .bracelet-stage {
@@ -1108,10 +1119,13 @@ svg {
   }
 
   .trash-zone {
-    width: 44px;
-    height: 44px;
-    right: 16px;
-    top: 102px;
+    width: 52px;
+    height: 52px;
+    right: 44px;
+    top: auto;
+    bottom: 104px;
+    background: rgba(255, 255, 255, 0.36);
+    opacity: 0.76;
   }
 
   .action-strip {
