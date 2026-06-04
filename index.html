@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>恒星水晶 DIY</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <main id="homeView" class="home-view" aria-labelledby="homeTitle">
+        <section class="hero-copy">
+          <p class="brand-mark">恒星水晶</p>
+          <h1 id="homeTitle"><span>由你设计</span><span>由恒星定义</span></h1>
+          <p class="hero-subtitle">打造你个人的天体能量。</p>
+          <div class="hero-actions" aria-label="首页操作">
+            <button class="button button-primary" type="button" data-action="open-designer">
+              <span>开始设计</span>
+              <span class="button-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img">
+                  <path d="M5 12h13m-5-5 5 5-5 5" />
+                </svg>
+              </span>
+            </button>
+            <button class="button button-secondary" type="button" data-action="open-gallery">查看画廊</button>
+          </div>
+        </section>
+
+        <section class="hero-visual" aria-label="水晶手串主视觉">
+          <canvas id="heroCanvas" width="1180" height="760"></canvas>
+          <div class="hero-focus-bead" aria-hidden="true"></div>
+        </section>
+      </main>
+
+      <main id="designerView" class="designer-view" aria-label="水晶手串设计器" hidden>
+        <aside class="catalog-panel">
+          <div class="panel-header">
+            <button class="icon-button" type="button" data-action="back-home" aria-label="返回首页">
+              <svg viewBox="0 0 24 24" role="img">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+            <div>
+              <p class="eyebrow">DIY STUDIO</p>
+              <h2>选择水晶珠</h2>
+            </div>
+          </div>
+
+          <section class="catalog-list" aria-label="珠子目录">
+            <div class="section-title-row">
+              <h3>颜色分类</h3>
+              <span id="activeGroupLabel">白色系</span>
+            </div>
+            <div id="colorTabs" class="color-tabs" aria-label="颜色大类"></div>
+            <div id="catalogGroups" class="catalog-groups"></div>
+          </section>
+        </aside>
+
+        <section class="workspace-panel">
+          <div class="studio-topbar">
+            <div>
+              <p class="eyebrow">LIVE PREVIEW</p>
+              <h2>星轨手串</h2>
+            </div>
+            <button class="button button-secondary compact" type="button" data-action="open-gallery">画廊</button>
+          </div>
+
+          <div class="metrics-row" aria-label="设计数据">
+            <article>
+              <span>总价</span>
+              <strong id="totalPrice">¥0</strong>
+            </article>
+            <article>
+              <span>剩余</span>
+              <strong id="remainingLength">16.3cm</strong>
+            </article>
+            <article>
+              <span>珠数</span>
+              <strong id="beadCount">0</strong>
+            </article>
+          </div>
+
+          <div class="bracelet-stage">
+            <div class="trash-zone" id="trashZone" aria-label="拖到这里删除">
+              <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                <path d="M4 7h16m-10 4v6m4-6v6M9 7l1-2h4l1 2m-9 0 1 14h10l1-14" />
+              </svg>
+            </div>
+            <div class="bracelet-ring" id="braceletRing" aria-label="手串预览">
+              <div class="ring-guide"></div>
+              <p id="emptyState" class="empty-state">开始设计</p>
+            </div>
+          </div>
+
+          <div class="action-strip">
+            <button class="button button-primary save-button" type="button" data-action="generate-code">保存设计</button>
+            <button class="tool-button" type="button" data-action="restore-code">载入设计</button>
+            <button class="tool-button" type="button" data-action="capture">截图</button>
+          </div>
+
+          <section class="code-panel" id="codePanel" hidden aria-live="polite">
+            <div>
+              <span>短代码</span>
+              <strong id="generatedCode">HX-READY</strong>
+            </div>
+            <p id="warningText">当前方案还未接近完整。</p>
+          </section>
+        </section>
+      </main>
+
+      <section class="gallery-drawer" id="galleryDrawer" aria-label="成品画廊" hidden>
+        <div class="drawer-scrim" data-action="close-gallery"></div>
+        <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="galleryTitle">
+          <div class="drawer-header">
+            <div>
+              <p class="eyebrow">SHOWCASE</p>
+              <h2 id="galleryTitle">固定成品画廊</h2>
+            </div>
+            <button class="icon-button" type="button" data-action="close-gallery" aria-label="关闭画廊">
+              <svg viewBox="0 0 24 24" role="img">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="gallery-grid">
+            <article class="gallery-item tone-moon">
+              <div class="mini-bracelet"></div>
+              <h3>月光序列</h3>
+              <p>白水晶 / 灰月光 / 透明光感</p>
+            </article>
+            <article class="gallery-item tone-ink">
+              <div class="mini-bracelet"></div>
+              <h3>深空轨道</h3>
+              <p>黑曜石 / 青金石 / 冷色能量</p>
+            </article>
+            <article class="gallery-item tone-rose">
+              <div class="mini-bracelet"></div>
+              <h3>玫瑰星尘</h3>
+              <p>粉晶 / 紫晶 / 柔光层次</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="size-modal" id="sizeModal" aria-label="选择手围" hidden>
+        <div class="modal-scrim" data-action="close-size-modal"></div>
+        <div class="size-dialog" role="dialog" aria-modal="true" aria-labelledby="sizeDialogTitle">
+          <div class="drawer-header">
+            <div>
+              <p class="eyebrow">WRIST SIZE</p>
+              <h2 id="sizeDialogTitle">选择手围</h2>
+            </div>
+            <button class="icon-button" type="button" data-action="close-size-modal" aria-label="关闭手围选择">
+              <svg viewBox="0 0 24 24" role="img">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <section class="size-control modal-size-control" aria-labelledby="modalSizeTitle">
+            <div class="section-title-row">
+              <h3 id="modalSizeTitle">手围</h3>
+              <span id="finishedSizeText">成品 16.3cm</span>
+            </div>
+            <div class="size-presets" aria-label="常用手围">
+              <button type="button" data-size="14">14</button>
+              <button type="button" data-size="15">15</button>
+              <button type="button" data-size="15.5" class="active">15.5</button>
+              <button type="button" data-size="16">16</button>
+              <button type="button" data-size="17">17</button>
+            </div>
+            <label class="manual-size">
+              <span>手动输入</span>
+              <input id="wristInput" type="number" inputmode="decimal" min="10" max="22" step="0.1" value="15.5" />
+              <span>cm</span>
+            </label>
+          </section>
+          <button class="button button-primary size-confirm" type="button" data-action="confirm-size">进入设计</button>
+        </div>
+      </section>
+
+      <section class="design-code-modal" id="designCodeModal" aria-label="保存或载入设计" hidden>
+        <div class="modal-scrim" data-action="close-code-modal"></div>
+        <div class="size-dialog code-dialog" role="dialog" aria-modal="true" aria-labelledby="codeDialogTitle">
+          <div class="drawer-header">
+            <div>
+              <p class="eyebrow" id="codeDialogEyebrow">DESIGN CODE</p>
+              <h2 id="codeDialogTitle">保存设计</h2>
+            </div>
+            <button class="icon-button" type="button" data-action="close-code-modal" aria-label="关闭代码弹窗">
+              <svg viewBox="0 0 24 24" role="img">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="saved-code-view" id="savedCodeView">
+            <label class="code-field">
+              <span>设计代码</span>
+              <textarea id="savedCodeText" readonly rows="5"></textarea>
+            </label>
+            <p id="savedCodeHint">把这段代码发给商家，或者之后载入继续编辑。</p>
+            <button class="button button-primary size-confirm" type="button" data-action="copy-code">复制代码</button>
+          </div>
+
+          <div class="load-code-view" id="loadCodeView" hidden>
+            <label class="code-field">
+              <span>粘贴设计代码</span>
+              <textarea id="loadCodeText" rows="6" placeholder="粘贴保存设计生成的代码"></textarea>
+            </label>
+            <p id="loadCodeHint">载入后会还原手围、珠子顺序和当时保存的总价。</p>
+            <button class="button button-primary size-confirm" type="button" data-action="confirm-load-code">载入设计</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
