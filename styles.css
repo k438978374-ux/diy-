@@ -157,6 +157,10 @@ svg {
   font-weight: 700;
 }
 
+.danger-tool {
+  color: #7a2d2d;
+}
+
 .button {
   min-height: 48px;
   border: 0;
@@ -655,6 +659,25 @@ svg {
   font-size: 14px;
 }
 
+.toast-message {
+  position: absolute;
+  left: 50%;
+  bottom: 86px;
+  z-index: 12;
+  max-width: min(420px, calc(100% - 32px));
+  transform: translateX(-50%);
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(17, 18, 22, 0.9);
+  box-shadow: 0 18px 34px rgba(17, 18, 22, 0.22);
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+}
+
 .gallery-drawer[hidden],
 [hidden] {
   display: none !important;
@@ -864,15 +887,16 @@ svg {
   .hero-visual {
     min-height: 0;
     align-self: stretch;
+    overflow: visible;
   }
 
   #heroCanvas {
-    width: min(116%, 720px);
-    margin-right: -28%;
+    width: min(100%, 620px);
+    margin: 0 auto;
   }
 
   .hero-focus-bead {
-    left: 54%;
+    left: 50%;
     top: 30%;
   }
 
@@ -880,20 +904,20 @@ svg {
     min-height: 100dvh;
     width: 100vw;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(320px, 42dvh) minmax(0, calc(58dvh - 12px));
-    gap: 12px;
-    padding: 12px;
+    grid-template-rows: minmax(540px, 70dvh) minmax(0, calc(30dvh - 8px));
+    gap: 8px;
+    padding: 8px;
   }
 
   .catalog-panel {
     grid-row: 2;
     min-height: 0;
     height: 100%;
-    width: calc(100vw - 24px);
-    max-width: calc(100vw - 24px);
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
     overflow: hidden;
-    padding: 12px;
-    gap: 10px;
+    padding: 10px;
+    gap: 8px;
     border-radius: 22px;
   }
 
@@ -901,18 +925,18 @@ svg {
     grid-row: 1;
     min-height: 0;
     height: 100%;
-    width: calc(100vw - 24px);
-    max-width: calc(100vw - 24px);
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
     overflow: hidden;
-    padding: 14px;
+    padding: 8px;
     grid-template-rows: auto auto minmax(0, 1fr) auto;
-    gap: 7px;
+    gap: 5px;
     border-radius: 22px;
   }
 
   .panel-header h2,
   .studio-topbar h2 {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .studio-topbar .button {
@@ -982,23 +1006,24 @@ svg {
 
   .metrics-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
     max-width: 100%;
   }
 
   .metrics-row article {
-    min-height: 56px;
-    padding: 9px;
-    border-radius: 14px;
+    min-height: 34px;
+    padding: 5px 8px;
+    border-radius: 12px;
   }
 
   .metrics-row span {
-    font-size: 11px;
+    font-size: 9px;
   }
 
   .metrics-row strong {
-    font-size: 17px;
+    margin-top: 1px;
+    font-size: 14px;
   }
 
   .bracelet-stage {
@@ -1006,34 +1031,33 @@ svg {
   }
 
   .bracelet-ring {
-    width: min(68vw, 21dvh);
+    width: min(94vw, 52dvh);
   }
 
   .trash-zone {
-    width: 48px;
-    height: 48px;
-    right: 10px;
-    top: 10px;
+    width: 42px;
+    height: 42px;
+    right: 8px;
+    top: 8px;
   }
 
   .action-strip {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
   }
 
   .action-strip .button,
   .action-strip .tool-button {
     width: 100%;
     min-width: 0;
-    padding: 0 10px;
-    font-size: 13px;
-    min-height: 44px;
+    padding: 0 4px;
+    font-size: 11px;
+    min-height: 32px;
   }
 
   .code-panel {
-    min-height: 54px;
-    padding: 10px 12px;
+    display: none;
   }
 
   .code-panel strong {
@@ -1041,6 +1065,12 @@ svg {
   }
 
   .code-panel p {
+    font-size: 12px;
+  }
+
+  .toast-message {
+    bottom: 54px;
+    padding: 8px 12px;
     font-size: 12px;
   }
 

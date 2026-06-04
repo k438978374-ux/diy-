@@ -96,6 +96,7 @@
             <button class="button button-primary save-button" type="button" data-action="generate-code">保存设计</button>
             <button class="tool-button" type="button" data-action="restore-code">载入设计</button>
             <button class="tool-button" type="button" data-action="capture">截图</button>
+            <button class="tool-button danger-tool" type="button" data-action="clear-design">清空</button>
           </div>
 
           <section class="code-panel" id="codePanel" hidden aria-live="polite">
@@ -105,6 +106,7 @@
             </div>
             <p id="warningText">当前方案还未接近完整。</p>
           </section>
+          <div class="toast-message" id="toastMessage" hidden aria-live="polite"></div>
         </section>
       </main>
 

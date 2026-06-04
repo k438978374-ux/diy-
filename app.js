@@ -51,6 +51,7 @@ const els = {
   codePanel: document.querySelector("#codePanel"),
   generatedCode: document.querySelector("#generatedCode"),
   warningText: document.querySelector("#warningText"),
+  toastMessage: document.querySelector("#toastMessage"),
   galleryDrawer: document.querySelector("#galleryDrawer"),
   designCodeModal: document.querySelector("#designCodeModal"),
   codeDialogTitle: document.querySelector("#codeDialogTitle"),
@@ -178,7 +179,8 @@ function getBeadPosition(index, count) {
 
 function getBeadDisplaySize(bead, count, ringSize) {
   const sizeScale = Math.max(0.62, Math.min(1, ringSize / 480));
-  const baseSize = (22 + bead.size * 2.6) * sizeScale;
+  const touchScale = window.matchMedia("(max-width: 700px)").matches ? 1.2 : 1;
+  const baseSize = (22 + bead.size * 2.6) * sizeScale * touchScale;
   const maxByCount = count > 1 ? (ringSize * 2.136) / count * 0.74 : baseSize;
   return Math.max(14, Math.min(baseSize, maxByCount));
 }
@@ -206,9 +208,7 @@ function addBead(skuId) {
   if (!item) return;
   const nextUsed = usedCm() + item.size / 10;
   if (nextUsed > finishedCm()) {
-    els.codePanel.hidden = false;
-    els.generatedCode.textContent = "已满";
-    els.warningText.textContent = "当前手围已满，不能再加入这颗珠子。";
+    showToast("当前手围已满，不能再加入这颗珠子。");
     return;
   }
   state.beads.push({ ...item, instanceId: `${item.id}-${Date.now()}-${Math.random().toString(16).slice(2)}` });
@@ -230,12 +230,11 @@ function updateWristSize(value) {
 function generateCode() {
   const remainder = finishedCm() - usedCm();
   const code = createDesignCode();
-  els.codePanel.hidden = false;
-  els.generatedCode.textContent = "已保存";
-  els.warningText.textContent = remainder > 2
+  const hint = remainder > 2
     ? `当前还剩 ${remainder.toFixed(1)}cm，方案可能还未完整。`
     : "方案已接近完整，可以发送给商家。";
-  openSaveCodeModal(code, els.warningText.textContent);
+  showToast("设计代码已生成。");
+  openSaveCodeModal(code, hint);
 }
 
 function createDesignCode() {
@@ -321,6 +320,23 @@ function openLoadCodeModal() {
 
 function closeCodeModal() {
   els.designCodeModal.hidden = true;
+}
+
+function showToast(message) {
+  els.toastMessage.textContent = message;
+  els.toastMessage.hidden = false;
+  window.clearTimeout(showToast.timer);
+  showToast.timer = window.setTimeout(() => {
+    els.toastMessage.hidden = true;
+  }, 2200);
+}
+
+function clearDesign() {
+  state.beads = [];
+  state.dragging = null;
+  els.codePanel.hidden = true;
+  showToast("已清空当前设计。");
+  render();
 }
 
 async function copySavedCode() {
@@ -475,17 +491,14 @@ document.addEventListener("click", event => {
     try {
       restoreDesignFromCode(els.loadCodeText.value);
       closeCodeModal();
-      els.codePanel.hidden = false;
-      els.generatedCode.textContent = "已载入";
-      els.warningText.textContent = "设计已还原，可以继续编辑。";
+      showToast("设计已还原，可以继续编辑。");
     } catch (error) {
       els.loadCodeHint.textContent = error.message || "代码无效，请检查后重试。";
     }
   }
+  if (action === "clear-design") clearDesign();
   if (action === "capture") {
-    els.codePanel.hidden = false;
-    els.generatedCode.textContent = "截图";
-    els.warningText.textContent = "截图按钮 UI 占位，后续接入导出图片。";
+    showToast("截图功能下一步接入。");
   }
 });
 
