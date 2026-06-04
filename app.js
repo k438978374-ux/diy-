@@ -116,10 +116,11 @@ function renderBracelet(previousRects = null) {
   const visualBeads = state.beads;
   const count = visualBeads.length;
   const ringSize = els.braceletRing.getBoundingClientRect().width || 420;
+  const layout = getBeadLayout(visualBeads, ringSize);
   visualBeads.forEach((bead, index) => {
     const node = document.createElement("div");
-    const position = getBeadPosition(index, count);
-    const size = getBeadDisplaySize(bead, count, ringSize);
+    const position = layout.positions[index];
+    const size = layout.sizes[index];
     const isDragging = state.dragging?.instanceId === bead.instanceId;
     const x = isDragging && state.dragging.pointerPct ? state.dragging.pointerPct.x : position.x;
     const y = isDragging && state.dragging.pointerPct ? state.dragging.pointerPct.y : position.y;
@@ -169,13 +170,28 @@ function animateBeadsFrom(previousRects) {
   });
 }
 
-function getBeadPosition(index, count) {
-  const angle = count === 1 ? -Math.PI / 2 : -Math.PI / 2 + (Math.PI * 2 / count) * index;
+function getBeadPosition(angle) {
   const guideRadiusPct = 37;
   return {
     x: 50 + Math.cos(angle) * guideRadiusPct,
     y: 50 + Math.sin(angle) * guideRadiusPct
   };
+}
+
+function getBeadLayout(beads, ringSize) {
+  const sizes = beads.map(bead => getBeadDisplaySize(bead, beads.length, ringSize));
+  const guideRadiusPx = ringSize * 0.37;
+  const packingTightness = 0.94;
+  let angle = -Math.PI / 2;
+  const positions = sizes.map((size, index) => {
+    if (index > 0) {
+      const prevSize = sizes[index - 1];
+      angle += (((prevSize / 2) + (size / 2)) * packingTightness) / guideRadiusPx;
+    }
+    return getBeadPosition(angle);
+  });
+
+  return { positions, sizes };
 }
 
 function getBeadDisplaySize(bead, count, ringSize) {
