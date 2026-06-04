@@ -117,6 +117,7 @@ function renderBracelet(previousRects = null) {
   const count = visualBeads.length;
   const ringSize = els.braceletRing.getBoundingClientRect().width || 420;
   const layout = getBeadLayout(visualBeads, ringSize);
+  els.braceletRing.style.setProperty("--ring-guide-inset", `${50 - layout.guideRadiusPct}%`);
   visualBeads.forEach((bead, index) => {
     const node = document.createElement("div");
     const position = layout.positions[index];
@@ -170,8 +171,7 @@ function animateBeadsFrom(previousRects) {
   });
 }
 
-function getBeadPosition(angle) {
-  const guideRadiusPct = 37;
+function getBeadPosition(angle, guideRadiusPct) {
   return {
     x: 50 + Math.cos(angle) * guideRadiusPct,
     y: 50 + Math.sin(angle) * guideRadiusPct
@@ -179,34 +179,95 @@ function getBeadPosition(angle) {
 }
 
 function getBeadLayout(beads, ringSize) {
-  const sizes = beads.map(bead => getBeadDisplaySize(bead, beads.length, ringSize));
+  const baseSizes = beads.map(bead => getBeadDisplaySize(bead, beads.length, ringSize));
+  const defaultGuideRadiusPct = 37;
   if (!isNearFinished()) {
     return {
-      positions: beads.map((_, index) => getEvenBeadPosition(index, beads.length)),
-      sizes
+      guideRadiusPct: defaultGuideRadiusPct,
+      positions: beads.map((_, index) => getEvenBeadPosition(index, beads.length, defaultGuideRadiusPct)),
+      sizes: baseSizes
     };
   }
 
-  const guideRadiusPx = ringSize * 0.37;
+  const tangentLayout = getClosedTangentLayout(baseSizes, ringSize);
+  const guideRadiusPct = (tangentLayout.guideRadiusPx / ringSize) * 100;
   let angle = -Math.PI / 2;
-  const positions = sizes.map((size, index) => {
+  const positions = tangentLayout.sizes.map((size, index) => {
     if (index > 0) {
-      const prevSize = sizes[index - 1];
-      angle += ((prevSize / 2) + (size / 2)) / guideRadiusPx;
+      const prevSize = tangentLayout.sizes[index - 1];
+      angle += getTangentAngleStep(prevSize, size, tangentLayout.guideRadiusPx);
     }
-    return getBeadPosition(angle);
+    return getBeadPosition(angle, guideRadiusPct);
   });
 
-  return { positions, sizes };
+  return { guideRadiusPct, positions, sizes: tangentLayout.sizes };
 }
 
-function getEvenBeadPosition(index, count) {
+function getEvenBeadPosition(index, count, guideRadiusPct) {
   const angle = count === 1 ? -Math.PI / 2 : -Math.PI / 2 + (Math.PI * 2 / count) * index;
-  return getBeadPosition(angle);
+  return getBeadPosition(angle, guideRadiusPct);
 }
 
 function isNearFinished() {
   return finishedCm() - usedCm() <= 0.5;
+}
+
+function getClosedTangentLayout(baseSizes, ringSize) {
+  if (baseSizes.length <= 1) {
+    return { guideRadiusPx: ringSize * 0.37, sizes: baseSizes };
+  }
+
+  const availableOuterRadius = (ringSize / 2) - 4;
+  let sizes = [...baseSizes];
+  let guideRadiusPx = solveTangentGuideRadius(sizes);
+
+  const largestRadius = Math.max(...sizes) / 2;
+  const requiredOuterRadius = guideRadiusPx + largestRadius;
+  if (requiredOuterRadius > availableOuterRadius) {
+    const scale = Math.max(0.52, (availableOuterRadius / requiredOuterRadius) * 0.995);
+    sizes = sizes.map(size => size * scale);
+    guideRadiusPx = solveTangentGuideRadius(sizes);
+  }
+
+  return { guideRadiusPx, sizes };
+}
+
+function solveTangentGuideRadius(sizes) {
+  const largestPairDistance = sizes.reduce((max, size, index) => {
+    const nextSize = sizes[(index + 1) % sizes.length];
+    return Math.max(max, (size / 2) + (nextSize / 2));
+  }, 0);
+
+  let low = (largestPairDistance / 2) + 0.001;
+  let high = Math.max(low * 1.2, largestPairDistance);
+
+  while (getTangentAngleSum(sizes, high) > Math.PI * 2) {
+    high *= 1.35;
+  }
+
+  for (let i = 0; i < 42; i += 1) {
+    const mid = (low + high) / 2;
+    if (getTangentAngleSum(sizes, mid) > Math.PI * 2) {
+      low = mid;
+    } else {
+      high = mid;
+    }
+  }
+
+  return high;
+}
+
+function getTangentAngleSum(sizes, guideRadiusPx) {
+  return sizes.reduce((sum, size, index) => {
+    const nextSize = sizes[(index + 1) % sizes.length];
+    return sum + getTangentAngleStep(size, nextSize, guideRadiusPx);
+  }, 0);
+}
+
+function getTangentAngleStep(sizeA, sizeB, guideRadiusPx) {
+  const centerDistance = (sizeA / 2) + (sizeB / 2);
+  const ratio = Math.min(1, centerDistance / (guideRadiusPx * 2));
+  return 2 * Math.asin(ratio);
 }
 
 function getBeadDisplaySize(bead, count, ringSize) {
