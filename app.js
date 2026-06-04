@@ -180,7 +180,7 @@ function getBeadPosition(angle) {
 
 function getBeadLayout(beads, ringSize) {
   const sizes = beads.map(bead => getBeadDisplaySize(bead, beads.length, ringSize));
-  if (!isBraceletFull()) {
+  if (!isNearFinished()) {
     return {
       positions: beads.map((_, index) => getEvenBeadPosition(index, beads.length)),
       sizes
@@ -205,8 +205,8 @@ function getEvenBeadPosition(index, count) {
   return getBeadPosition(angle);
 }
 
-function isBraceletFull() {
-  return finishedCm() - usedCm() <= 0.15;
+function isNearFinished() {
+  return finishedCm() - usedCm() <= 0.5;
 }
 
 function getBeadDisplaySize(bead, count, ringSize) {
